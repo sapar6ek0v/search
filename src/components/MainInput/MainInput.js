@@ -1,10 +1,12 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
+import './MainInput.css'
 import Input from "../Input/Input.js";
 
 const MainInput = () => {
     const [text, setText] = useState('')
-    const [aboutCompany, setAboutCompany] = useState([])
-    const item_name_ref = useRef()
+    const [aboutCompanies, setAboutCompanies] = useState([])
+    const [company, setCompany] = useState({})
+    const [show, setShow] = useState(false)
 
     const url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/party"
     const token = "f7c789f1f5e040a354b86ff6a437d881ded2055a"
@@ -21,68 +23,81 @@ const MainInput = () => {
         body: JSON.stringify({query})
     }
 
-    // const handleInput = () => {
-    //         fetch(url, options)
-    //             .then(response => response.json())
-    //             .then(result => {
-    //
-    //             })
-    //             .catch(error => console.log("error", error));
-    // }
 
     useEffect(() => {
         fetch(url, options)
             .then(response => response.json())
             .then(result => {
-                setAboutCompany(result.suggestions)
-                console.log(aboutCompany)
+                setAboutCompanies(result.suggestions)
+                setShow(true)
             })
             .catch(error => console.log("error", error));
     }, [text])
 
 
+    const findByInn = (inn) => {
+        fetch("https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party", {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": "Token " + token
+            },
+            body: JSON.stringify({query : inn, branch_type: "MAIN"})
+          }).then(response => response.json())
+            .then(result => {
+                setCompany(result.suggestions[0])
+                setShow(false)
+                setText('')
+            })
+            .catch(error => console.log("error", error))
+    }
+
+    const handleInput = (e) => {
+        setText(e)
+    }
+
     return (
-        <div>
+        <div className='info-page'>
+
+
             <div>
+                <p className='rule-title'>Компания или ИП</p>
                 <input
-                    // value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    ref={item_name_ref}
+                    value={text}
+                    onChange={(e) => handleInput(e.target.value)}
                     type="text"
-                    list="companyNames"
-                    id="companyName"
-                    name="companyName"
+                    className='rule-search-input'
+                    placeholder='Введите название организации'
                 />
             </div>
 
-            <datalist id="companyNames">
+
+            <ul hidden={!show} className='ul-helper'>
                 {
-                    aboutCompany.map(company => {
+                    aboutCompanies.map(company => {
                         return (
-                            <option key={company.data?.inn} value={company.value}/>
+                            <li
+                                onClick={() => findByInn(company.data?.inn)}
+                                className='li-helper'
+                                key={company.data?.inn}
+                            >
+                                <p className='li-title'>{company.value}</p>
+                                <p className='li-item'>
+                                    <span>{company.data?.inn}</span>
+                                    <span>{company.address?.value}</span>
+                                </p>
+                            </li>
                         )
                     })
                 }
-            </datalist>
-            {
-                !aboutCompany.length ?   <div>
-                    <Input title={'Краткое наименование'} />
-                    <Input title={'Полное наименование'} />
-                    <Input title={'ИНН / КПП'} />
-                    <Input title={'Адрес'} />
-                </div>  : aboutCompany
-                    .filter(company => company.value === item_name_ref.current.value )
-                    .map(it => {
-                        return (
-                            <>
-                                <Input defaultValue={it.value} title={'Краткое наименование'} />
-                                <Input defaultValue={it.data?.name?.full_with_opf} title={'Полное наименование'} />
-                                <Input defaultValue={`${it.data?.inn}/${it.data?.kpp}`} title={'ИНН / КПП'} />
-                                <Input defaultValue={it.data?.address?.value} title={'Адрес'} />
-                            </>
-                        )
-                    })
-            }
+            </ul>
+
+            <Input defaultValue={company.value} title={'Краткое наименование'} />
+            <Input defaultValue={company.data?.name?.full_with_opf} title={'Полное наименование'} />
+            <Input defaultValue={`${company.data?.inn}/${company.data?.kpp}`}  title={'ИНН / КПП'} />
+            <Input defaultValue={company.data?.address?.value} title={'Адрес'} />
 
 
         </div>

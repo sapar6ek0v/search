@@ -1,0 +1,11 @@
+.input-block {
+    margin-bottom: 20px;
+}
+
+.about-input {
+    padding: 5px 10px;
+    font-size: 18px;
+    width: 50%;
+    overflow: auto;
+    text-overflow: ellipsis;
+}

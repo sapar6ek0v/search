@@ -1,0 +1,42 @@
+.info-page {
+    padding: 50px 0;
+}
+
+.rule-title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 20px;
+}
+.rule-search-input {
+    width: 100%;
+    padding: 8px 15px;
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.ul-helper {
+    list-style: none;
+    position: absolute;
+    top: 145px;
+    right: 0;
+    left: 0;
+    width: 85%;
+    margin: 0 auto;
+    /*padding: 0 105px;*/
+}
+
+.li-helper {
+    background: #c6c9c4;
+    border: 1px solid black;
+    padding: 10px 10px;
+    cursor: pointer;
+}
+.li-title {
+    font-weight: bolder;
+    margin-bottom: 3px;
+}
+.li-item {
+    display: flex;
+    color: #646664;
+}

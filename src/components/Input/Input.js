@@ -4,7 +4,7 @@ import './Input.css'
 const Input = ({title ,defaultValue}) => {
     return (
         <div className='input-block'>
-            <h3>{title ? title : ''}</h3>
+            <div className='input-title'>{title ? title : ''}</div>
             <input
                 defaultValue={defaultValue === undefined ?  '' : defaultValue}
                 type="text"

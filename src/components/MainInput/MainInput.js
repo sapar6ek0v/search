@@ -96,7 +96,10 @@ const MainInput = () => {
 
             <Input defaultValue={company.value} title={'Краткое наименование'} />
             <Input defaultValue={company.data?.name?.full_with_opf} title={'Полное наименование'} />
-            <Input defaultValue={`${company.data?.inn}/${company.data?.kpp}`}  title={'ИНН / КПП'} />
+            <div className='input-block'>
+                <div className='input-title'>ИНН / КПП</div>
+                <input className='about-input' value={`${company.data?.inn ? company.data?.inn : ''}/${company.data?.kpp ? company.data?.kpp : '' }`} type="text"/>
+            </div>
             <Input defaultValue={company.data?.address?.value} title={'Адрес'} />
 
 

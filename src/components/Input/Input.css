@@ -9,3 +9,8 @@
     overflow: auto;
     text-overflow: ellipsis;
 }
+
+.input-title {
+    font-size: 18px;
+    font-weight: bold;
+}
